@@ -51,3 +51,10 @@
     <%= submit "Change password" %>
   </div>
 <% end %>
+
+<h3>Integrations</h3>
+<ul>
+  <li>
+    <%= link "Connect Facebook", to: "/auth/facebook" %>
+  </li>
+</ul>

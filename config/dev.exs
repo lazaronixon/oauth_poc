@@ -74,3 +74,7 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
+  client_id: "946588172753107",
+  client_secret: "783b2a364251ca751b8994d8f8eb6a28"

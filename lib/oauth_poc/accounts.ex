@@ -346,4 +346,37 @@ defmodule OauthPoc.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  alias OauthPoc.Accounts.Integration
+  alias Ueberauth.Auth
+
+  def update_or_create_integration(%User{} = user, %Auth{} = auth) do
+    attrs = build_integration(user, auth)
+
+    case Repo.get_by(Integration, %{ user_id: user.id, provider: Atom.to_string(auth.provider) }) do
+      nil -> create_integration!(attrs)
+      integration -> update_integration!(integration, attrs)
+    end
+  end
+
+  defp create_integration!(attrs) do
+    %Integration{} |> Integration.changeset(attrs) |> Repo.insert!()
+  end
+
+  defp update_integration!(integration, attrs) do
+    integration |> Integration.changeset(attrs) |> Repo.update!()
+  end
+
+  defp build_integration(user, auth) do
+    %{
+      provider: Atom.to_string(auth.provider),
+      token: auth.credentials.token,
+      refresh_token: auth.credentials.refresh_token,
+      token_type: auth.credentials.token_type,
+      secret: auth.credentials.secret,
+      expires: auth.credentials.expires,
+      expires_at: auth.credentials.expires_at,
+      user_id: user.id,
+    }
+  end
 end
